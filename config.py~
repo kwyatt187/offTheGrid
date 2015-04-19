@@ -1,0 +1,4 @@
+# configuration
+DATABASE = '/tmp/offTheGrid.db'
+DEBUG = True
+SECRET_KEY = '\x97\xab/\xb0\xc7\x82Ng\x9f\xfe\x87\x92I<\x8a\x98]\x82\xf3A\xc4=\n\xe4'

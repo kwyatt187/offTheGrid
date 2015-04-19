@@ -1,0 +1,35 @@
+.navbar {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    background-color: black;
+    color: blue;
+    text-align: center;
+    
+}
+
+.metanav {
+    color: blue;
+    text-align: left;
+    float: right;
+}
+
+.left-menu {
+    float: left;
+    height: 100%;
+    width: 15%;
+}
+
+.afterparties {
+    margin: 0 auto;
+    padding-y: 80px;
+    width: 50%;
+}
+.scrolling-images {
+    width: 400px;
+    height: 400px;
+    overflow: scroll;
+    margin-left: auto;
+    margin-right: auto;
+}
+

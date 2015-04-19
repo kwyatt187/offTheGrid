@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block body %}
+<form action="{{ url_for('add_after_party') }}" method=POST>
+  <label>Location:</label><br>
+  <input type=text name=location required><br>
+  <label>Date:</label><br>
+  <input type=text name=date required><br>
+  <label>Description:</label><br>
+  <textarea name=description rows=10 cols=40 required></textarea><br>
+  <input type=hidden name=username value={{ session.username }}>
+  <input type=submit value=Add>
+</form>
+{% endblock %}

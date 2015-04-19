@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="scrolling-images">
+  {% for image in scrolling_images %}
+  <img src={{ url_for('static', filename=image) }}>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block body %}
+<div id='bookevent' >
+  <form class='simple-form' action="{{ url_for('book_event') }}" method=post>
+    <h1>Book an OTG Event</h1>
+    <div id='row0'>
+      <div id='reason' >
+	<h3>Reason for event:</h3>
+	<input type='text' name='reason' required>
+      </div>
+      
+      <div id='secrecy'>
+      	<h3>Level of Secrecy:</h3>
+      	<select id='secrecy-value' name='secrecylevel'>
+	  <option></option>
+      	  <option value='Low Level'>Low Level</option>
+	  <option value='Celebrity Status'>Celebrity Status</option>
+	  <option value='Top Secret'>Top Secret</option>
+      	</select>
+      </div>
+    </div>
+    
+    <div id='row1'>
+      <div id='people'>
+	<h3>Number of People:</h3>
+	<input type='number' min='1' name=numpeople required></input>
+      </div>
+      
+      <div id='budget'>
+	<h3>Budget:</h3>
+	<input type='number' name=budget required></input>
+      </div>
+  </div>
+    
+    <div id='row2'>
+      <div id='location'>
+    	<h3>Location:</h3>
+    	<select id='location-value'>
+	  <option></option>
+    	  {% for location in locations %}
+	  <option value='{{ location }}'>{{ location }}</option>
+	  {% endfor %}
+    	</select>
+      </div>
+    </div>
+  </br>
+  <div id='book'>
+    <input type='submit' id='book-button' value='Send'></input>
+  </div>
+  </form>
+</div>
+{% endblock %}
