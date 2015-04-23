@@ -14,6 +14,16 @@ app.config.from_object('config')
 GoogleMaps(app)
 mongo = PyMongo(app)
 
+
+
+def no_ssl_required(fn):
+    @wraps(fn)
+    def decorated_view(*args, **kwargs):
+        if request.is_secure:
+            return redirect(request.url.replace("https://","http://"))
+        return fn(*args, **kwargs)
+    return decorated_view
+
 def ssl_required(fn):
     @wraps(fn)
     def decorated_view(*args, **kwargs):
@@ -26,6 +36,7 @@ def ssl_required(fn):
     return decorated_view
 
 @app.route('/')
+@no_ssl_required
 def home():
     os.chdir('/var/www/offTheGrid/static/home_images')
     scrolling_images = os.listdir('.')
@@ -34,10 +45,12 @@ def home():
 )
 
 @app.route('/findlocations')
+@no_ssl_required
 def find_locations():
     return render_template('findlocations.html')
 
 @app.route('/buyad', methods=['GET','POST'])
+@no_ssl_required
 def buy_ad():
     if request.method == 'POST':
         book_request = "Location: " + request.form['location'] + "\n"
@@ -59,6 +72,7 @@ def buy_ad():
         return render_template('buyad.html', locations=locations)
 
 @app.route('/bookevent', methods=['GET', 'POST'])
+@no_ssl_required
 def book_event():
     if request.method == 'POST':
         book_request = "Reason: " + request.form['reason'] + "\n"
@@ -82,6 +96,7 @@ def book_event():
         return render_template('bookevent.html', locations=locations)
 
 @app.route('/afterparty')
+@no_ssl_required
 def after_party():
     if not session.get('logged_in'):
         return render_template('login.html')
@@ -90,6 +105,7 @@ def after_party():
         return render_template('afterparty.html', afterparties=afterparties)
 
 @app.route('/addafterparty', methods=['GET', 'POST'])
+@no_ssl_required
 def add_after_party():
     if not session.get('logged_in'):
         return render_template('login.html')
@@ -104,6 +120,7 @@ def add_after_party():
             return render_template('addafterparty.html')
 
 @app.route('/myafterparties', methods=['GET', 'POST'])
+@no_ssl_required
 def edit_after_parties():
     if not session.get('logged_in'):
         return render_template('login.html')
@@ -148,6 +165,7 @@ def login():
         
 
 @app.route('/logout')
+@no_ssl_required
 def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
@@ -181,6 +199,7 @@ def signup():
         return render_template('signup.html', error=error)
 
 @app.route('/forgotpassword', methods=['GET','POST'])
+@no_ssl_required
 def forgot_password():
     error = None
     if request.method == 'POST':

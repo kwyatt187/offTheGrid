@@ -6,14 +6,14 @@
 </div>
 <div class=afterparties>
   {% for afterparty in afterparties %}
-  <label>Location:</label>
-  {{ afterparty.location }}<br>
-  <label>Date:</label>
-  {{ afterparty.date }}<br>
-  <label>Description:</label><br>
-  {{ afterparty.description }}<br>
-  <label>Submitted by:</label>
-  {{ afterparty.submittedby }}<br>
+  <dt>Location:</dt>
+  <dd>{{ afterparty.location }}</dd>
+  <dt>Date:</dt>
+  <dd>{{ afterparty.date }}</dd>
+  <dt>Description:</dt>
+  <dd><pre>{{ afterparty.description }}</pre></dd>
+  <dt>Submitted by:</dt>
+  <dd>{{ afterparty.submittedby }}</dd>
   <hr>
   {% else %}
   <h3>No after parties yet</h3>
