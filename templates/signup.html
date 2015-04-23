@@ -5,11 +5,13 @@
   <form action="{{ url_for('signup') }}" method=post>
     <dl>
       <dt>Username:</dt>
-      <dd><input type=text name=username></dd>
+      <dd><input type=text name=username required></dd>
       <dt>Password:</dt>
-      <dd><input type=password name=password></dd>
+      <dd><input type=password name=password1 required></dd>
+      <dt>Re-type Password:</dt>
+      <dd><input type=password name=password2 required></dd>
       <dt>Email:</dt>
-      <dd><input type=text name=email></dd>
+      <dd><input type=text name=email required></dd>
       <dd><input type=submit value="Sign up"></dd>
     </dl>
   </form>

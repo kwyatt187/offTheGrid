@@ -15,7 +15,7 @@
     <select id='location-value' name=location>
       <option></option>
       {% for location in locations %}
-      <option value="{{ location }}">{{ location }}</option>
+      <option value="{{ location.name }}">{{ location.name }}</option>
       {% endfor %}
     </select>
   </div>

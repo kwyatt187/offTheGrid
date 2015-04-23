@@ -8,12 +8,12 @@
   {% for afterparty in afterparties %}
   <form action="{{ url_for('edit_after_parties') }}" method=POST>
     <label>Location:</label>
-    <input type=text name=location value="{{ afterparty.location }}"><br>
+    <input type=text name=location value="{{ afterparty.location }}" required><br>
     <label>Date:</label>
-    <input type=text name=date value="{{ afterparty.date }}"><br>
+    <input type=text name=date value="{{ afterparty.date }}" required><br>
     <label>Description:</label><br>
-    <textarea name=description rows=10 cols=40>{{ afterparty.description }}</textarea><br>
-    <input type=hidden name=id value={{ afterparty.id }}>
+    <textarea name=description rows=10 cols=40 required>{{ afterparty.description }}</textarea><br>
+    <input type=hidden name=_id value={{ afterparty._id }}>
     <input type=submit name=update value=Update>
     <input type=submit name=delete value=Delete>
     <hr>

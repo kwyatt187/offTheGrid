@@ -1,7 +1,8 @@
 import smtplib
 from email.mime.text import MIMEText
 import os
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from functools import wraps
+from flask import Flask, request, session, redirect, url_for, render_template, flash, current_app
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from contextlib import closing
@@ -13,6 +14,16 @@ app.config.from_object('config')
 GoogleMaps(app)
 mongo = PyMongo(app)
 
+def ssl_required(fn):
+    @wraps(fn)
+    def decorated_view(*args, **kwargs):
+        if current_app.config.get("SSL"):
+            if request.is_secure:
+                return fn(*args, **kwargs)
+            else:
+                return redirect(request.url.replace("http://","https://"))
+        return fn(*args, **kwargs)
+    return decorated_view
 
 @app.route('/')
 def home():
@@ -110,13 +121,14 @@ def edit_after_parties():
             elif 'delete' in request.form:
                 mongo.db.afterparties.remove({ '_id' : ObjectId(request.form['_id']) ,
                                                'submittedby' : session['username'] })
-
+            flash("After party updated.")
             return redirect(url_for('edit_after_parties'))
         else:
             afterparties = mongo.db.afterparties.find({'submittedby' : session['username']}).sort([( '_id', -1)])
             return render_template('myafterparties.html', afterparties=afterparties)
             
 @app.route('/login', methods=['GET', 'POST'])
+@ssl_required
 def login():
     error = None
     if request.method == 'POST':
@@ -142,6 +154,7 @@ def logout():
     return redirect(url_for('home'))
 
 @app.route('/signup', methods=['GET', 'POST'])
+@ssl_required
 def signup():
     error = None
     if request.method == 'POST':
