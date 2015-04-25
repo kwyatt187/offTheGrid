@@ -2,7 +2,7 @@
 {% block body %}
 <div class="scrolling-images">
   {% for image in scrolling_images %}
-  <img src={{ url_for('static', filename=image) }}>
+  <img src="{{ url_for('static', filename=image) }}" height="400px" width="400px">
   {% endfor %}
 </div>
 {% endblock %}

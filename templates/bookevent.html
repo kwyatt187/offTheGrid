@@ -1,52 +1,44 @@
 {% extends "layout.html" %}
 {% block body %}
-<div id='bookevent' >
-  <form class='simple-form' action="{{ url_for('book_event') }}" method=post>
+<div class="container-fluid">
+  <form  role="form" action="{{ url_for('book_event') }}" method=post>
     <h1>Book an OTG Event</h1>
-    <div id='row0'>
-      <div id='reason' >
-	<h3>Reason for event:</h3>
-	<input type='text' name='reason' required>
+    <div class="row">
+      <div class="form-group col-md-2">
+	<label>Reason for event:</label>
+	<input class="form-control" type='text' name='reason' required>
       </div>
-      
-      <div id='secrecy'>
-      	<h3>Level of Secrecy:</h3>
-      	<select id='secrecy-value' name='secrecylevel'>
+      <div class="form-group col-md-2">
+	<label>Level of Secrecy:</label>
+	<select class="form-control" name='secrecylevel'>
 	  <option></option>
-      	  <option value='Low Level'>Low Level</option>
+	  <option value='Low Level'>Low Level</option>
 	  <option value='Celebrity Status'>Celebrity Status</option>
 	  <option value='Top Secret'>Top Secret</option>
-      	</select>
+	</select>
+      </div>
+    
+      <div class="form-group col-md-2">
+	<label>Number of People:</label>
+	<input class="form-control" type='number' min='1' name=numpeople required>
       </div>
     </div>
-    
-    <div id='row1'>
-      <div id='people'>
-	<h3>Number of People:</h3>
-	<input type='number' min='1' name=numpeople required></input>
+    <div class="row">
+      <div class="form-group col-md-2">
+	<label>Budget:</label>
+	<input class="form-control" type='number' name=budget required>
       </div>
-      
-      <div id='budget'>
-	<h3>Budget:</h3>
-	<input type='number' name=budget required></input>
-      </div>
-  </div>
-    
-    <div id='row2'>
-      <div id='location'>
-    	<h3>Location:</h3>
-    	<select id='location-value'>
-	  <option></option>
-    	  {% for location in locations %}
-	  <option value='{{ location.name }}'>{{ location.name }}</option>
-	  {% endfor %}
-    	</select>
+      <div class="form-group col-md-2">
+	<label>Location:</label>
+      <select class="form-control" name='location'>
+	<option></option>
+	{% for location in locations %}
+	<option value='{{ location.name }}'>{{ location.name }}</option>
+	{% endfor %}
+      </select>
       </div>
     </div>
-  </br>
-  <div id='book'>
-    <input type='submit' id='book-button' value='Send'></input>
-  </div>
+    <button  class="btn col-md-2" type="submit">Send</button>
   </form>
 </div>
 {% endblock %}

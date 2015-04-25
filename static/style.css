@@ -22,7 +22,6 @@
 
 .afterparties {
     margin: 0 auto;
-    padding-y: 80px;
     width: 50%;
 }
 .scrolling-images {
@@ -33,3 +32,7 @@
     margin-right: auto;
 }
 
+.center {
+    width: 20%;
+    margin: 0 auto;
+}

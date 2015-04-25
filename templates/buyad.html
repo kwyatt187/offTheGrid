@@ -1,38 +1,37 @@
 {% extends "layout.html" %}
 {% block body %}
-<section id='buyad'>
+<div class="container-fluid">
   <h1>Buy an OTG Ad</h1>
-  <a id='choose-location' href="{{ url_for('find_locations') }}">Choose by location</a><br>
-  <form class='simple-form' action="{{ url_for('buy_ad') }}" method=POST>
-  <div id='budget'>
-    <h3>Budget:</h3>
-    <input type='number' min='0' name=budget ></input>
-  </div>
-  
-  
-  <div id='location'>
-    <h3>Location:</h3>
-    <select id='location-value' name=location>
-      <option></option>
-      {% for location in locations %}
-      <option value="{{ location.name }}">{{ location.name }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  
-  <div id='ad-type'>
-    <h3>Type of ad:</h3>
-    <input type='text' name=adtype></input>
-  </div>
-  </br>
-  <div id='buy'>
-    <input type='submit' id='buy-button' value='Send'</input>
-  </div>
+  <a href="{{ url_for('find_locations') }}">Choose by location</a><br>
+  <form role="form" action="{{ url_for('buy_ad') }}" method=POST>
+    <div class="row">
+      <div class="form-group col-md-2">
+	<label>Budget:</label>
+	<input class="form-control" type='number' min='0' name=budget ></input>
+      </div>
+      <div class="form-group col-md-2">
+	<label>Location:</label>
+	<select class="form-control" name=location>
+	  <option></option>
+	  {% for location in locations %}
+	  <option value="{{ location.name }}">{{ location.name }}</option>
+	  {% endfor %}
+	</select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-2">
+	<label>Type of ad:</label>
+	<input class="form-control" type='text' name=adtype></input>
+      </div>
+    </div>
+    <button class="btn col-md-2" type='submit'>Send</button>
   </form>
+
   <div class='text-center'>
+    <br>
     <h3>View menu of services</h3>
-    <img "/static/buyad/img/menu.jpg"/>
+    <img src="{{ url_for('static', filename='buyad/menu.jpg') }}"/>
   </div>
-  
-</section>
+<div>
 {% endblock %}
