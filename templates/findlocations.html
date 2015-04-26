@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-{{ googlemap("locations", lat=30.25, lng=-97.75, style="height:500px;width:700px", zoom=11) }}
+<div class="container-fluid">
+  {{ googlemap("locations", lat=30.25, lng=-97.75, style="height:500px;width:700px", zoom=11) }}
+</div>
 {% endblock %}
