@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 <div class="container-fluid">
-  <h1>Buy an OTG Ad</h1>
+  <h3>Buy an OTG Ad</h3>
   <a href="{{ url_for('find_locations') }}">Choose by location</a><br>
   <form role="form" action="{{ url_for('buy_ad') }}" method=POST>
     <div class="row">
@@ -28,10 +28,10 @@
     <button class="btn col-md-2" type='submit'>Send</button>
   </form>
 
-  <div class='text-center'>
+  <div class='text-center menu'>
     <br>
     <h3>View menu of services</h3>
-    <img src="{{ url_for('static', filename='buyad/menu.jpg') }}"/>
+    <img  src="{{ url_for('static', filename='buyad/menu.jpg') }}"/>
   </div>
 <div>
 {% endblock %}

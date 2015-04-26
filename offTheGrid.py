@@ -99,7 +99,7 @@ def book_event():
 @no_ssl_required
 def after_party():
     if not session.get('logged_in'):
-        return render_template('login.html')
+        return redirect(url_for('login'))
     else:
         afterparties = mongo.db.afterparties.find().sort([( '_id', -1)])
         return render_template('afterparty.html', afterparties=afterparties)
@@ -108,7 +108,7 @@ def after_party():
 @no_ssl_required
 def add_after_party():
     if not session.get('logged_in'):
-        return render_template('login.html')
+        return redirect(url_for('login'))
     else:
         if request.method == 'POST':
             mongo.db.afterparties.insert({'location': request.form['location'],
@@ -123,7 +123,7 @@ def add_after_party():
 @no_ssl_required
 def edit_after_parties():
     if not session.get('logged_in'):
-        return render_template('login.html')
+        return redirect(url_for('login'))
     else:
         if request.method == 'POST':
             if 'update' in request.form:
