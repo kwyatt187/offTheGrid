@@ -1,14 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
-<form action="{{ url_for('add_after_party') }}" method=POST>
-  <dl>
-    <dt>Location:</dt>
-    <dd><input type=text name=location required></dd>
-    <dt>Date:</dt>
-    <dd><input type=datetime-local name=date required></dd>
-    <dt>Description:</dt>
-    <dd><textarea name=description rows=10 cols=40 required></textarea></dd>
-    <dd><input type=submit value=Add></dd>
-  </dl>
-</form>
+<div class="center">
+  <form role="form" action="{{ url_for('add_after_party') }}" method=POST>
+    <div class="form-group">
+      <label>Location:</label>
+      <input class="form-control" type=text name=location required>
+    </div>
+    <div class="form-group">
+      <label>Date:</label>
+      <input class="form-control" type=text name=date required>
+    </div>
+    <div class="form-group">
+      <label>Description:</label>
+      <textarea class="form-control" name=description rows=10 cols=40 required></textarea>
+    </div>
+    <button class="btn" type=submit>Add</button>
+  </form>
+</div>
 {% endblock %}

@@ -4,20 +4,24 @@
   <a href="{{ url_for('add_after_party') }}">Add after party</a><br>
   <a href="{{ url_for('edit_after_parties') }}">My after parties</a><br>
 </div>
-<div class=afterparties>
+<div class="container-fluid afterparties">
   {% for afterparty in afterparties %}
-  <form action="{{ url_for('edit_after_parties') }}" method=POST>
-    <dl>
-      <dt>Location:</dt>
-      <dd><input type=text name=location value="{{ afterparty.location }}" required></dd>
-      <dt>Date:</dt>
-      <dd><input type=datetime-local name=date value="{{ afterparty.date }}" required></dd>
-      <dt>Description:</dt>
-      <dd><textarea name=description rows=10 cols=40 required>{{ afterparty.description }}</textarea></dd>
-      <dd><input type=hidden name=_id value={{ afterparty._id }}></dd>
-      <input type=submit name=update value=Update>
-      <input type=submit name=delete value=Delete>
-    </dl>
+  <form role="form" action="{{ url_for('edit_after_parties') }}" method=POST>
+    <div "form-group">
+      <label>Location:</label>
+      <input class="form-control" type=text name=location value="{{ afterparty.location }}" required>
+    </div>
+    <div class="form-group">
+      <label>Date:</label>
+      <input class="form-control" type=text name=date value="{{ afterparty.date }}" required>
+    </div>
+    <div class="form-group">
+      <label>Description:</label>
+      <textarea class="form-control" name=description rows=10 cols=40 required>{{ afterparty.description }}</textarea>
+    </div>
+    <input type=hidden name="_id" value={{ afterparty._id }}>
+    <button class="btn" type=submit name=update>Update</button>
+    <button class="btn" type=submit name=delete>Delete</button>
     <hr>
   </form>
   {% else %}

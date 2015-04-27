@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="center">
+<div class="container-fluid center">
   <h3>Login</h3>
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
     <form role="form" action="{{ url_for('login') }}" method=post>
@@ -13,6 +13,7 @@
 	<input class="form-control" type=password name=password required>
       </div>
       <button class="btn" type="submit">Login</button>
+      <br>
       <br>
       <a href="{{ url_for('signup') }}">Sign up</a> |
       <a href="{{ url_for('forgot_password') }}">Forgot username or password</a>

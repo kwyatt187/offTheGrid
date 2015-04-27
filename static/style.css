@@ -5,10 +5,12 @@
     background-color: black;
     color: blue;
     text-align: center;
+    font-size: large;
     
 }
 
 .metanav {
+    font-size: large;
     color: blue;
     text-align: left;
     float: right;
@@ -32,11 +34,10 @@ body {
   height: 60px;
   background-color: black;
   text-align: center;
-  vertical-align: middle;
 }
 
 .left-menu {
-    font-size: 12;
+    font-size: large;
     float: left;
     height: 100%;
     width: 15%;
@@ -72,6 +73,8 @@ body {
 .btn {
     background-color: #0562F8;
     color: black;
+    float: right;
+    margin-left: 7px;
 }
 
 #locations {
