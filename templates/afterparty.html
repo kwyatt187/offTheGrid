@@ -1,20 +1,22 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class=left-menu>
+<div id="left-menu">
   <a href="{{ url_for('add_after_party') }}">Add after party</a><br>
   <a href="{{ url_for('edit_after_parties') }}">My after parties</a><br>
 </div>
-<div class=afterparties>
+<div class="afterparties">
   {% for afterparty in afterparties %}
-  <dt>Location:</dt>
-  <dd>{{ afterparty.location }}</dd>
-  <dt>Date:</dt>
-  <dd>{{ afterparty.date }}</dd>
-  <dt>Description:</dt>
-  <dd><pre>{{ afterparty.description }}</pre></dd>
-  <dt>Submitted by:</dt>
-  <dd>{{ afterparty.submittedby }}</dd>
-  <hr>
+  <dl>
+    <dt>Location:</dt>
+    <dd>{{ afterparty.location }}</dd>
+    <dt>Date:</dt>
+    <dd>{{ afterparty.date }}</dd>
+    <dt>Description:</dt>
+    <dd><pre>{{ afterparty.description }}</pre></dd>
+    <dt>Submitted by:</dt>
+    <dd>{{ afterparty.submittedby }}</dd>
+    <hr>
+  </dl>
   {% else %}
   <h3>No after parties yet</h3>
   {% endfor %}

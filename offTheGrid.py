@@ -132,6 +132,7 @@ def edit_after_parties():
         return redirect(url_for('login'))
     else:
         if request.method == 'POST':
+            success_message = ""
             if 'update' in request.form:
                 mongo.db.afterparties.update({ '_id' : ObjectId(request.form['_id']),
                                                'submittedby' : session['username'] },
@@ -140,11 +141,14 @@ def edit_after_parties():
                                                'description' : request.form['description'],
                                                'submittedby' : session['username']},
                                              upsert=True  )
+                success_message = "After party updated."
                                              
             elif 'delete' in request.form:
                 mongo.db.afterparties.remove({ '_id' : ObjectId(request.form['_id']) ,
                                                'submittedby' : session['username'] })
-            flash("After party updated.")
+                success_message = "After party deleted."
+
+            flash(success_message)
             return redirect(url_for('edit_after_parties'))
         else:
             afterparties = mongo.db.afterparties.find({'submittedby' : session['username']}).sort([( '_id', -1)])

@@ -12,7 +12,7 @@
       <input class="form-control" type=text name=location value="{{ afterparty.location }}" required>
     </div>
     <div class="form-group">
-      <label>Date:</label>
+      <label>Date and time (mm/dd/yyyy hh:mm am/pm):</label>
       <input class="form-control" type=text name=date value="{{ afterparty.date }}" required>
     </div>
     <div class="form-group">
@@ -20,9 +20,10 @@
       <textarea class="form-control" name=description rows=10 cols=40 required>{{ afterparty.description }}</textarea>
     </div>
     <input type=hidden name="_id" value={{ afterparty._id }}>
-    <button class="btn" type=submit name=update>Update</button>
     <button class="btn" type=submit name=delete>Delete</button>
-    <hr>
+    <button class="btn" type=submit name=update>Update</button>
+    <br>
+    <br>
   </form>
   {% else %}
   <h3>No after parties yet</h3>
