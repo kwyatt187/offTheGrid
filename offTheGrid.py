@@ -59,7 +59,7 @@ def buy_ad():
     if request.method == 'POST':
         ad_request = "Name: " + request.form['name'] + "\n"
         ad_request += "Phone number: " + request.form['phone'] + "\n"
-        ad_request = "Location: " + request.form['location'] + "\n"
+        ad_request += "Location: " + request.form['location'] + "\n"
         ad_request += "Budget: " + request.form['budget'] + "\n"
         ad_request += "Ad type: " + request.form['adtype'] + "\n"
 
