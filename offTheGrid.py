@@ -8,12 +8,10 @@ from flask import Flask, request, session, redirect, url_for, render_template, f
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from contextlib import closing
-#from flask_googlemaps import GoogleMaps
 import config
 
 app = Flask(__name__)
 app.config.from_object('config')
-#GoogleMaps(app)
 mongo = PyMongo(app)
 
 
