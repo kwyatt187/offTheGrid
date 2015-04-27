@@ -49,13 +49,13 @@ html {
 }
 
 .afterparties {
-    margin: 0 auto;
     width: 40%;
+    margin: 0 auto;
 }
 
 
 .center {
-    width: 20%;
+    width: 260px;
     margin-right: auto;
     margin-left: auto;
 }
@@ -76,7 +76,7 @@ html {
     background-color: #0562F8;
     color: black;
     float: right;
-    margin-left: 7px;
+    margin-right: 7px;
 }
 
 #content {
