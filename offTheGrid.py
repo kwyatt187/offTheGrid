@@ -14,8 +14,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 mongo = PyMongo(app)
 
-
-
 def no_ssl_required(fn):
     @wraps(fn)
     def decorated_view(*args, **kwargs):
@@ -42,8 +40,7 @@ def home():
     os.chdir('/var/www/offTheGrid/static/home_images')
     scrolling_images = os.listdir('.')
     scrolling_images = ["home_images/"+img for img in scrolling_images]
-    return render_template('home.html', scrolling_images=scrolling_images
-)
+    return render_template('home.html', scrolling_images=scrolling_images)
 
 @app.route('/findlocations')
 @no_ssl_required
