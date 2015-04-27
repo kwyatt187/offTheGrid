@@ -41,7 +41,7 @@ html {
   text-align: center;
 }
 
-#left-menu {
+.left-menu {
     font-size: large;
     float: left;
     height: 100%;
@@ -61,7 +61,7 @@ html {
 }
 
 .flash { 
-    font-size: x-large;
+    font-size: large;
     text-align: center;
     background: #cee5F5; 
     padding: 0.5em;

@@ -48,8 +48,9 @@ def find_locations():
     # This is undesirable, but necessary to go over the same list in the template
     locations_for_map = mongo.db.locations.find().sort([("name", 1)])
     locations_list = mongo.db.locations.find().sort([("name", 1)])
-    return render_template('findlocations.html', locations_for_map=locations_for_map,
-                           locations_list=locations_list, key=config.GOOGLE_API_KEY)
+    return render_template('findlocations.html', 
+                           locations_for_map=locations_for_map,
+                           locations_list=locations_list,)
 
 
 @app.route('/buyad', methods=['GET','POST'])
