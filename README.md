@@ -1,10 +1,11 @@
 # offTheGrid
 Web application for Off The Grid Advertising
 
-Need to Install:
-apache2 (enable mod_ssl)
-libapache2-mod-wsgi
+Depends on:
+apache2
+mod_ssl
+mod_wsgi
 mongodb
 flask
-Flask_GoogleMaps
 Flask_PyMongo
+Google Maps JavaScript API
