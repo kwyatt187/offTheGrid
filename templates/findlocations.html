@@ -1,6 +1,45 @@
 {% extends "layout.html" %}
 {% block body %}
+<script type="text/javascript">
+    $(window).load(function (){
+	var map;
+	var locations = [
+	    {% for location in locations_for_map %}	  
+	    [ '{{ location.name }}', '{{ location.address }}', {{ location.lat }}, {{ location.lng }} ],
+	    {% endfor %}
+	]
+	var mapOptions = {
+	    zoom: 11,
+	    center: new google.maps.LatLng(30.25,-97.75)
+	}
+	map = new google.maps.Map($('#map-canvas')[0], mapOptions);
+	
+	var infowindow = new google.maps.InfoWindow(), marker, i;      
+	
+	for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+		position: new google.maps.LatLng(locations[i][2], locations[i][3]),
+            });
+	    marker.setMap(map)
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+		return function() {
+		    infowindow.setContent(locations[i][0]+"<br>"+locations[i][1]);
+		    infowindow.open(map, marker);
+		}
+            })(marker, i));
+	}
+    })
+</script>
 <div class="container-fluid">
-  {{ googlemap("locations", lat=30.25, lng=-97.75, style="height:500px;width:700px", zoom=11) }}
+  <h3>Locations</h3>
+  <div id="locations">
+    {% for location in locations_list %}
+    <p>{{ location.name }}</p>
+    <p>{{ location.address }}</p>
+    <hr>
+    {% endfor %}
+  </div>
+
+  <div id="map-canvas" style="float: right; width: 480px; height: 480px;"></div>
 </div>
 {% endblock %}

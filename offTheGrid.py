@@ -1,17 +1,19 @@
+from urllib import urlopen
 import smtplib
 from email.mime.text import MIMEText
 import os
+import json
 from functools import wraps
 from flask import Flask, request, session, redirect, url_for, render_template, flash, current_app
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from contextlib import closing
-from flask_googlemaps import GoogleMaps
+#from flask_googlemaps import GoogleMaps
 import config
 
 app = Flask(__name__)
 app.config.from_object('config')
-GoogleMaps(app)
+#GoogleMaps(app)
 mongo = PyMongo(app)
 
 
@@ -35,6 +37,7 @@ def ssl_required(fn):
         return fn(*args, **kwargs)
     return decorated_view
 
+
 @app.route('/')
 @no_ssl_required
 def home():
@@ -47,7 +50,12 @@ def home():
 @app.route('/findlocations')
 @no_ssl_required
 def find_locations():
-    return render_template('findlocations.html')
+    # This is undesirable, but necessary to go over the same list in the template
+    locations_for_map = mongo.db.locations.find().sort([("name", 1)])
+    locations_list = mongo.db.locations.find().sort([("name", 1)])
+    return render_template('findlocations.html', locations_for_map=locations_for_map,
+                           locations_list=locations_list, key=config.GOOGLE_API_KEY)
+
 
 @app.route('/buyad', methods=['GET','POST'])
 @no_ssl_required
@@ -63,12 +71,12 @@ def buy_ad():
         msg['To'] = "kwyatt187@gmail.com"
         
         s = smtplib.SMTP('localhost')
-        s.sendmail("Off_The_Grid_booking@offthegrid.com", ["kwyatt187@gmail.com"], msg.as_string())
+        s.sendmail("Off_The_Grid_booking@offthegridadvertising.com", ["kwyatt187@gmail.com"], msg.as_string())
         s.quit()
         flash('Ad request sent')
         return redirect(url_for('buy_ad'))
     else:
-        locations = mongo.db.locations.find()
+        locations = mongo.db.locations.find().sort([("name" , 1)])
         return render_template('buyad.html', locations=locations)
 
 @app.route('/bookevent', methods=['GET', 'POST'])
@@ -87,12 +95,12 @@ def book_event():
         msg['To'] = "kwyatt187@gmail.com"
         
         s = smtplib.SMTP('localhost')
-        s.sendmail("Off_The_Grid_booking@offthegrid.com", ["kwyatt187@gmail.com"], msg.as_string())
+        s.sendmail("Off_The_Grid_booking@offthegridadvertising.com", ["kwyatt187@gmail.com"], msg.as_string())
         s.quit()
         flash('Booking request sent')
         return render_template('bookevent.html')
     else:
-        locations = mongo.db.locations.find()
+        locations = mongo.db.locations.find().sort([("name" , 1)])
         return render_template('bookevent.html', locations=locations)
 
 @app.route('/afterparty')
