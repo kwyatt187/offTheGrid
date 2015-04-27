@@ -22,14 +22,13 @@ html {
   position: relative;
   min-height: 100%;
 }
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-  height: 100%;
-}
 
-.container-fluid {
-    margin-bottom: 0 auto 100px;
+#scrolling-images {
+    width: 400px;
+    height: 400px;
+    overflow: scroll;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #footer {
@@ -54,17 +53,11 @@ body {
     width: 40%;
 }
 
-#scrolling-images {
-    width: 400px;
-    height: 400px;
-    overflow: scroll;
-    margin-left: auto;
-    margin-right: auto;
-}
 
 .center {
-    width: 22%;
-    margin: 0 auto;
+    width: 20%;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .flash { 
