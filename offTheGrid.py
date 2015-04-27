@@ -56,6 +56,8 @@ def find_locations():
 @no_ssl_required
 def buy_ad():
     if request.method == 'POST':
+        ad_request = "Name: " + request.form['name'] + "\n"
+        ad_request += "Phone number: " + request.form['phone'] + "\n"
         ad_request = "Location: " + request.form['location'] + "\n"
         ad_request += "Budget: " + request.form['budget'] + "\n"
         ad_request += "Ad type: " + request.form['adtype'] + "\n"
@@ -78,7 +80,9 @@ def buy_ad():
 @no_ssl_required
 def book_event():
     if request.method == 'POST':
-        book_request = "Reason: " + request.form['reason'] + "\n"
+        book_request = "Name: " + request.form['name'] + "\n"
+        book_request += "Phone number: " + request.form['phone'] + "\n"
+        book_request += "Reason: " + request.form['reason'] + "\n"
         book_request += "Location: " + request.form['location'] + "\n"
         book_request += "Secrecy level: " + request.form['secrecylevel'] + "\n"
         book_request += "Number of people: " + request.form['numpeople'] + "\n"

@@ -4,41 +4,51 @@
   <form  role="form" action="{{ url_for('book_event') }}" method=post>
     <h3>Book an OTG Event</h3>
     <div class="row">
-      <div class="form-group col-md-2">
-	<label>Reason for event:</label>
-	<input class="form-control" type='text' name='reason' required>
+      <div class="form-group col-sm-3">
+	<label>Name:</label>
+	<input class="form-control" type="text" name="name" required>
       </div>
-      <div class="form-group col-md-2">
-	<label>Level of Secrecy:</label>
-	<select class="form-control" name='secrecylevel'>
-	  <option></option>
-	  <option value='Low Level'>Low Level</option>
-	  <option value='Celebrity Status'>Celebrity Status</option>
-	  <option value='Top Secret'>Top Secret</option>
-	</select>
-      </div>
-    
-      <div class="form-group col-md-2">
-	<label>Number of People:</label>
-	<input class="form-control" type='number' min='1' name=numpeople required>
+      <div class="form-group col-sm-3">
+	<label>Phone number:</label>
+	<input class="form-control" type="text" name="phone" required>
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-md-2">
-	<label>Budget:</label>
-	<input class="form-control" type='number' name=budget required>
+      <div class="form-group col-sm-3">
+	<label>Reason for event:</label>
+	<input class="form-control" type="text" name="reason" required>
       </div>
-      <div class="form-group col-md-2">
+      <div class="form-group col-sm-3">
+	<label>Level of Secrecy:</label>
+	<select class="form-control" name="secrecylevel">
+	  <option></option>
+	  <option value="Low Level">Low Level</option>
+	  <option value="Celebrity Status">Celebrity Status</option>
+	  <option value="Top Secret">Top Secret</option>
+	</select>
+      </div>
+    
+      <div class="form-group col-sm-3">
+	<label>Number of People:</label>
+	<input class="form-control" type="number" min="1" name=numpeople required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-3">
+	<label>Budget:</label>
+	<input class="form-control" type="number" name=budget required>
+      </div>
+      <div class="form-group col-sm-3">
 	<label>Location:</label>
-      <select class="form-control" name='location'>
+      <select class="form-control" name="location">
 	<option></option>
 	{% for location in locations %}
-	<option value='{{ location.name }}'>{{ location.name }}</option>
+	<option value="{{ location.name }}">{{ location.name }}</option>
 	{% endfor %}
       </select>
       </div>
     </div>
-    <button  class="btn col-md-2" type="submit">Send</button>
+    <button  class="btn col-sm-1" type="submit">Send</button>
   </form>
 </div>
 {% endblock %}
