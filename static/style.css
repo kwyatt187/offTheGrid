@@ -84,15 +84,12 @@ html {
 }    
 
 #locations {
-    float: left;
     height: 100%;
     margin-left: 20px;
 }
 
 #map-canvas {
-    margin-right: 40px;
-    float: right; 
-    width: 600px;
-    height: 480px;
-    
+    width: 80%;
+    height: 400px;
+    margin: 0 auto;
 }

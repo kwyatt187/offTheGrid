@@ -11,7 +11,7 @@ function initialize (){
 	{% endfor %}
     ]
     var mapOptions = {
-	zoom: 10,
+	zoom: 11,
 	center: new google.maps.LatLng(30.25,-97.75)
     }
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -36,15 +36,18 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 </script>
 <div class="container-fluid">
-  <h3>Locations</h3>
-  <div id="locations">
-    {% for location in locations_list %}
-    <p><strong>{{ location.name }}</strong></p>
-    <p>{{ location.address }}</p>
-    <hr>
-    {% endfor %}
-  </div>
+  <div class="row">
+      <div id="map-canvas"></div>
+      <br>
+      <h3>Locations</h3>
+      <div id="locations">
+	{% for location in locations_list %}
+	<p><strong>{{ location.name }}</strong></p>
+	<p>{{ location.address }}</p>
+	<hr>
+	{% endfor %}
+      </div>
 
-  <div id="map-canvas"></div>
+  </div>
 </div>
 {% endblock %}
