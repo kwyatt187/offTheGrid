@@ -56,11 +56,11 @@ def find_locations():
 @no_ssl_required
 def buy_ad():
     if request.method == 'POST':
-        book_request = "Location: " + request.form['location'] + "\n"
-        book_request += "Budget: " + request.form['budget'] + "\n"
-        book_request += "Ad type: " + request.form['adtype'] + "\n"
+        ad_request = "Location: " + request.form['location'] + "\n"
+        ad_request += "Budget: " + request.form['budget'] + "\n"
+        ad_request += "Ad type: " + request.form['adtype'] + "\n"
 
-        msg = MIMEText(book_request)
+        msg = MIMEText(ad_request)
         msg['Subject'] = "Ad request"
         msg['From'] = "Off The Grid booking"
         msg['To'] = "kwyatt187@gmail.com"
@@ -93,7 +93,7 @@ def book_event():
         s.sendmail("Off_The_Grid_booking@offthegridadvertising.com", ["kwyatt187@gmail.com"], msg.as_string())
         s.quit()
         flash('Booking request sent')
-        return render_template('bookevent.html')
+        return redirect(url_for('book_event'))
     else:
         locations = mongo.db.locations.find().sort([("name" , 1)])
         return render_template('bookevent.html', locations=locations)
