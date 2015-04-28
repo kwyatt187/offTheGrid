@@ -9,3 +9,4 @@ mongodb
 flask
 Flask_PyMongo
 Google Maps JavaScript API
+stripe
