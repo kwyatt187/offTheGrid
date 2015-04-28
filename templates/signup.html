@@ -1,36 +1,98 @@
 {% extends "layout.html" %}
 {% block body %}
+<script type="text/javascript" charset="UTF-8">
+    Stripe.setPublishableKey('{{ publishable_key }}');
+function stripeResponseHandler(status, response) {
+    var form = $('#payment-form');
+
+    if (response.error) {
+	// Show the errors on the form
+	form.find('.payment-errors').text(response.error.message);
+	form.find('button').prop('disabled', false);
+    } else {
+	// response contains id and card, which contains additional card details
+	var token = response.id;
+	// Insert the token into the form so it gets submitted to the server
+	form.append($('<input type="hidden" name="stripeToken" />').val(token));
+	// and submit
+	form.get(0).submit();
+	form.find('button').prop('disabled', false);
+    }
+};
+
+$(function($) {
+    $('#payment-form').submit(function(event) {
+	var form = $(this);
+	// Disable the submit button to prevent repeated clicks
+	form.find('button').prop('disabled', true);
+	
+	Stripe.card.createToken(form, stripeResponseHandler);
+	
+	// Prevent the form from submitting with the default action
+	return false;
+    });
+});
+
+</script>
+ 
 <div class="container-fluid center">
   <h3>Sign up</h3>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-    <form role="form" action="{{ url_for('signup') }}" method=post>
-      <div class="row">
+  {% if error %}<p class=error>{{ error }}{% endif %}
+    <form id="payment-form" role="form" action="{{ url_for('signup') }}" method=post>
+      <span class="payment-errors"></span>
+      <div class="form-row">
 	<div class="form-group">
 	  <label>Username:</label>
 	  <input class="form-control" type=text name=username required>
 	</div>
       </div>
-      <div class="row">
+      <div class="form-row">
 	<div class="form-group">
 	  <label>Password:</label>
 	  <input class="form-control" type=password name=password1 required>
 	</div>
       </div>
-      <div class="row">
+      <div class="form-row">
 	<div class="form-group">
 	  <label>Re-type Password:</label>
 	  <input class="form-control" type=password name=password2 required>
 	</div>
       </div>
-      <div class="row">
+      <div class="form-row">
 	<div class="form-group">
 	  <label>Email:</label>
-	  <input  class="form-control" type=email name=email required>
+	  <input class="form-control" type="email" name="email" required/>
 	</div>
       </div>
-      <div class="row">
-	<button class="btn" type=submit>Sign up</button>
+      <div class="form-row">
+	<div class="form-group">
+	  <label>Subscription fee:</label>
+	  <input type="text" name="fee" value="${{ fee }}/month" readonly/>
+	</div>
       </div>
+      
+      <span class="payment-errors"></span>
+      <div class="form-row">
+	<div class="form-group">
+	  <label>Card Number:</label>
+	  <input type="text" size="20" data-stripe="number" required/>
+	</div>
+      </div>
+      
+      <div class="form-row">
+	<div class="form-group">
+	  <label>CVC: </label><input type="text" size="4" data-stripe="cvc" required/>
+	</div>
+      </div>
+      
+      <div class="form-row">
+	<div class="form-group">
+	  <label>Expiration (MM/YYYY) </label>  <input type="text" size="2" data-stripe="exp-month"/>
+	  <span> / </span>
+	  <input type="text" size="4" data-stripe="exp-year" required/>
+	</div>
+      </div>
+      <button id="payment-button" type="submit">Submit Payment</button>
     </form>
 </div>
 {% endblock %}

@@ -1,18 +1,20 @@
 from urllib import urlopen
 import smtplib
 from email.mime.text import MIMEText
-import os
-import json
 from functools import wraps
 from flask import Flask, request, session, redirect, url_for, render_template, flash, current_app
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from contextlib import closing
+import os
+import stripe
 import config
+
 
 app = Flask(__name__)
 app.config.from_object('config')
 mongo = PyMongo(app)
+stripe.api_key = config.STRIPE_SECRET_KEY
 
 def no_ssl_required(fn):
     @wraps(fn)
@@ -183,32 +185,67 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('home'))
 
+def add_subscriber(token, email, plan):
+    try:
+        customer = stripe.Customer.create(source=token, email=email, plan=plan)
+    except stripe.error.CardError, e:
+        # Since it's a decline, stripe.error.CardError will be caught
+        body = e.json_body
+        err  = body['error']
+
+        return err['message']
+    except stripe.error.InvalidRequestError, e:
+        # Invalid parameters were supplied to Stripe's API
+        pass
+    except stripe.error.AuthenticationError, e:
+        pass
+        
 @app.route('/signup', methods=['GET', 'POST'])
 @ssl_required
 def signup():
     error = None
+    fee = 2
+    cents = fee*100
     if request.method == 'POST':
         user = mongo.db.users.find({'username' : request.form['username']})
         email = mongo.db.users.find({'email' : request.form['email']})
         if user.count() > 0:
             error = "Username already exists"
-            return render_template('signup.html', error=error)
+            return render_template('signup.html', error=error,
+                                   publishable_key=config.STRIPE_PUBLISHABLE_KEY,
+                                   cents=cents, fee=fee)
+
         elif request.form['password1'] != request.form['password2']:
             error = "Passwords do not match"
-            return render_template('signup.html', error=error)
+            return render_template('signup.html', error=error,
+                                   publishable_key=config.STRIPE_PUBLISHABLE_KEY,
+                                   cents=cents, fee=fee)
+
         elif email.count() > 0:
             error = "A username with that email already exists"
-            return render_template('signup.html', error=error)
+            return render_template('signup.html', error=error,
+                                   publishable_key=config.STRIPE_PUBLISHABLE_KEY,
+                                   cents=cents, fee=fee)
+
         else:
             mongo.db.users.insert({'username' : request.form['username'],
                                    'password' : request.form['password1'],
                                    'email' : request.form['email']})
 
-            session['logged_in'] = True
-            session['username'] = request.form['username']
-            return redirect(url_for('after_party'))
+            error = add_subscriber(request.form['stripeToken'], request.form['email'], "afterparty")
+            if error:
+                return render_template('signup.html', error=error,
+                                       publishable_key=config.STRIPE_PUBLISHABLE_KEY,
+                                       cents=cents, fee=fee)
+
+            else:
+                session['logged_in'] = True
+                session['username'] = request.form['username']
+                return redirect(url_for('after_party'))
     else:
-        return render_template('signup.html', error=error)
+        return render_template('signup.html', error=error,
+                               publishable_key=config.STRIPE_PUBLISHABLE_KEY,
+                               cents=cents, fee=fee)
 
 @app.route('/forgotpassword', methods=['GET','POST'])
 @no_ssl_required
