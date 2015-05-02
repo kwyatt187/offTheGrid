@@ -6,6 +6,7 @@ from flask import Flask, request, session, redirect, url_for, render_template, f
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from contextlib import closing
+from time import mktime, localtime
 import os
 import stripe
 import config
@@ -108,7 +109,7 @@ def book_event():
 @app.route('/afterparty')
 @no_ssl_required
 def after_party():
-    if not session.get('logged_in'):
+    if not session.get('account_current'):
         return redirect(url_for('login'))
     else:
         afterparties = mongo.db.afterparties.find().sort([( '_id', -1)])
@@ -117,7 +118,7 @@ def after_party():
 @app.route('/addafterparty', methods=['GET', 'POST'])
 @no_ssl_required
 def add_after_party():
-    if not session.get('logged_in'):
+    if not session.get('account_current'):
         return redirect(url_for('login'))
     else:
         if request.method == 'POST':
@@ -132,7 +133,7 @@ def add_after_party():
 @app.route('/myafterparties', methods=['GET', 'POST'])
 @no_ssl_required
 def edit_after_parties():
-    if not session.get('logged_in'):
+    if not session.get('account_current'):
         return redirect(url_for('login'))
     else:
         if request.method == 'POST':
@@ -157,23 +158,42 @@ def edit_after_parties():
         else:
             afterparties = mongo.db.afterparties.find({'submittedby' : session['username']}).sort([( '_id', -1)])
             return render_template('myafterparties.html', afterparties=afterparties)
-            
+    
+
 @app.route('/login', methods=['GET', 'POST'])
 @ssl_required
 def login():
     error = None
     if request.method == 'POST':
         user = mongo.db.users.find({'username' : request.form['username']})
+
         if user.count() == 0:
             error = "Invalid username"
             return render_template('login.html', error=error)
         elif user[0]['password'] != request.form['password']:
             error = "Invalid  password"
             return render_template('login.html', error=error)
+        elif user[0]['status'] == 'cancelled':
+            error = "Subscription for this account has been cancelled."
+            return render_template('login.html', error=error)
+        elif user[0]['status'] == 'unverified':
+            error = "Please click the link in your email to verify your account."
+            return render_template('login.html', error=error)
         else:
-            session['logged_in'] = True
-            session['username'] = request.form['username']
-            return redirect(url_for('after_party'))
+            customer = stripe.Customer.retrieve(user[0]['customer_id'])
+            status = customer['subscriptions']['data'][0]['status']
+
+            if status.rstrip() == 'past_due':
+                error = "There was an issue with your last payment. Please update payment information."
+                session['logged_in'] = True
+                session['username'] = request.form['username']
+                return render_template('account.html', error=error, email=user[0]['email'])
+            else:
+                session['account_current'] = True
+                session['logged_in'] = True
+                session['username'] = request.form['username']
+                flash("Welcome to the after party.")
+                return redirect(url_for('after_party'))
     else:
         return render_template('login.html', error=error)
         
@@ -182,24 +202,27 @@ def login():
 @no_ssl_required
 def logout():
     session.pop('logged_in', None)
+    session.pop('account_current', None)
     flash('You were logged out')
     return redirect(url_for('home'))
 
 def add_subscriber(token, email, plan):
     try:
         customer = stripe.Customer.create(source=token, email=email, plan=plan)
+        return customer, None
     except stripe.error.CardError, e:
         # Since it's a decline, stripe.error.CardError will be caught
         body = e.json_body
         err  = body['error']
 
-        return err['message']
+        return (None, err['message'])
     except stripe.error.InvalidRequestError, e:
         # Invalid parameters were supplied to Stripe's API
         pass
     except stripe.error.AuthenticationError, e:
         pass
-        
+    
+
 @app.route('/signup', methods=['GET', 'POST'])
 @ssl_required
 def signup():
@@ -210,19 +233,19 @@ def signup():
         user = mongo.db.users.find({'username' : request.form['username']})
         email = mongo.db.users.find({'email' : request.form['email']})
         if user.count() > 0:
-            error = "Username already exists"
+            error = "Username already exists."
             return render_template('signup.html', error=error,
                                    publishable_key=config.STRIPE_PUBLISHABLE_KEY,
                                    cents=cents, fee=fee)
 
         elif request.form['password1'] != request.form['password2']:
-            error = "Passwords do not match"
+            error = "Passwords do not match."
             return render_template('signup.html', error=error,
                                    publishable_key=config.STRIPE_PUBLISHABLE_KEY,
                                    cents=cents, fee=fee)
 
         elif email.count() > 0:
-            error = "A username with that email already exists"
+            error = "Email address "+request.form['email']+" has already been used."
             return render_template('signup.html', error=error,
                                    publishable_key=config.STRIPE_PUBLISHABLE_KEY,
                                    cents=cents, fee=fee)
@@ -230,22 +253,48 @@ def signup():
         else:
             mongo.db.users.insert({'username' : request.form['username'],
                                    'password' : request.form['password1'],
-                                   'email' : request.form['email']})
-
-            error = add_subscriber(request.form['stripeToken'], request.form['email'], "afterparty")
-            if error:
-                return render_template('signup.html', error=error,
-                                       publishable_key=config.STRIPE_PUBLISHABLE_KEY,
-                                       cents=cents, fee=fee)
-
-            else:
-                session['logged_in'] = True
-                session['username'] = request.form['username']
-                return redirect(url_for('after_party'))
+                                   'email' : request.form['email'],
+                                   'token' : request.form['stripeToken'],
+                                   'status' : 'unverified'})
+            
+            
+            verification = "Click the link below to activate your account\n"
+            verification = "http://offthegridadvertising.com/verify/"+request.form['stripeToken']
+            
+            msg = MIMEText(verification)
+            msg['Subject'] = "Email verification"
+            msg['From'] = "Off The Grid Advertising"
+            msg['To'] = request.form['email']
+                
+            s = smtplib.SMTP('localhost')
+            s.sendmail("Off_The_Grid@offthegridadvertising.com", [request.form['email']], msg.as_string())
+            s.quit()
+            
+            flash("An email has been sent to "+request.form['email']+". Click the link to activate your account")
+            return redirect(url_for('login'))
     else:
         return render_template('signup.html', error=error,
                                publishable_key=config.STRIPE_PUBLISHABLE_KEY,
                                cents=cents, fee=fee)
+
+@app.route('/verify/<token>')
+@no_ssl_required
+def verify(token):
+    user = mongo.db.users.find({'token': token})
+    if user.count == 0 or user[0]['status'] in ['cancelled, verified']:
+        error = "Invalid account verification link"
+        return render_template('login.html', error=error)
+    else:
+        customer, error = add_subscriber(token, user[0]['email'], "afterparty")
+        if error:
+            return render_template('login.html', error=error)
+        else:
+            mongo.db.users.update({'token' : user[0]['token']},
+                                  {'$set' : {'customer_id' : customer['id'],
+                                             'status' : 'verified',
+                                             'verified_on' : mktime(localtime())}})
+            flash('Account activated.')
+            return redirect(url_for('login'))
 
 @app.route('/forgotpassword', methods=['GET','POST'])
 @no_ssl_required
@@ -267,12 +316,78 @@ def forgot_password():
             msg['To'] = request.form['email']
             
             s = smtplib.SMTP('localhost')
-            s.sendmail("Off_The_Grid_Account@offthegrid.com", [request.form['email']], msg.as_string())
+            s.sendmail("Off_The_Grid_Account@offthegridadvertising.com", [request.form['email']], msg.as_string())
             s.quit()
             flash("Email with password sent to "+request.form['email']+". Don't forget to check your spam.")
             return redirect(url_for('forgot_password'))
     else:
         return render_template('forgotpassword.html', error=error)
+
+@app.route('/account', methods=['GET','POST'])
+@ssl_required
+def account():
+    error = None
+
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    else:
+        user = mongo.db.users.find({'username': session['username']})
+        email = user[0]['email']
+        
+        if request.method == 'POST':
+            if 'update_email' in request.form:
+                newemail = mongo.db.users.find({'email' : request.form['newemail']})
+                if newemail.count() > 0:
+                    error = "Email address "+request.form['newemail']+" is already in registered"
+                else:
+                    email = request.form['newemail']
+                    mongo.db.users.update({'username' : session['username']},
+                                          {'$set' : {'email' : email}})
+                    flash("Email updated.")
+                return render_template('account.html', error=error, email=email,
+                                       publishable_key=config.STRIPE_PUBLISHABLE_KEY)
+
+            elif 'update_password' in request.form:
+                user = mongo.db.users.find({'username' : session['username']})
+                                            
+                if request.form['password1'] != request.form['password2']:
+                    error = "New passwords do not match"
+                else:
+                    mongo.db.users.update({'username' : session['username']},
+                                          {'$set' : {'password' : request.form['password1']}})
+                    flash('Password updated')
+                return render_template('account.html', error=error, email=email,
+                                       publishable_key=config.STRIPE_PUBLISHABLE_KEY)
+
+    
+            elif 'cancel_subscription' in request.form:
+                customer = mongo.db.users.find({'username' : session['username']})
+                customer = stripe.Customer.retrieve(customer[0]['customer_id'])
+                customer.delete()
+                mongo.db.users.update({'username' : session['username']},
+                                       {'$set' : {'status' : 'cancelled'}})
+                flash("Subscription cancelled")
+                return redirect(url_for('logout'))
+        else:
+            return render_template('account.html', error=error, email=email,
+                                   publishable_key=config.STRIPE_PUBLISHABLE_KEY)
+
+@app.route('/update_credit_card', methods=['GET', 'POST'])
+@ssl_required
+def update_credit_card():
+    """
+    This method is needed because the button name isn't populated in the form.
+    """
+    user = mongo.db.users.find({'username': session['username']})
+    email = user[0]['email']
+    customer = mongo.db.users.find({'username' : session['username']})
+    customer = stripe.Customer.retrieve(customer[0]['customer_id'])
+    card = customer.sources.create(source=request.form['stripeToken'])
+    customer['default_source'] = card['id']
+    flash("Credit card updated")
+    return render_template('account.html', error=None, email=email,
+                           publishable_key=config.STRIPE_PUBLISHABLE_KEY)
+
 # @app.route('/calendar')
 # def calendar():
 #     return render_template('calendar.html')

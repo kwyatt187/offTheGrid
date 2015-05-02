@@ -1,19 +1,9 @@
 .navbar {
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
     background-color: black;
     color: blue;
     text-align: center;
     font-size: large;
     
-}
-
-.metanav {
-    font-size: large;
-    color: blue;
-    text-align: left;
-    float: right;
 }
 
 /* Sticky footer styles
@@ -55,9 +45,8 @@ html {
 
 
 .center {
-    width: 280px;
-    margin-right: auto;
-    margin-left: auto;
+    width: 300px;
+    margin: 0 auto;
 }
 
 .flash { 
@@ -67,9 +56,11 @@ html {
     padding: 0.5em;
     border: 1px solid #aacbe2;
 }
-.error {
+.error, credit-card-errors {
     background: #f0d6d6;
     padding: 0.5em; 
+    width: 100%;
+    text-align: center;
 }
 
 .btn {
@@ -77,9 +68,10 @@ html {
     color: white;
     float: right;
     margin-right: 7px;
+    margin-top: 3px;
 }
 
-#payment-button, #login-button {
+#credit-card-button, #login-button, #cancel-button {
     background-color: #0562F8;
     border-color: #0562F8;
     color: white;
@@ -104,3 +96,14 @@ html {
     margin: 0 auto;
 }
 
+.account-form-group {
+    border-color: #E6E6E6;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    border: .1px double #E6E6E6 ;
+}
+
+.inner-form {
+    border: 10px;
+}

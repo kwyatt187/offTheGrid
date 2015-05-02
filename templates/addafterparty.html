@@ -1,20 +1,24 @@
 {% extends "layout.html" %}
 {% block body %}
+<div class="left-menu">
+  <a href="{{ url_for('add_after_party') }}">Add after party</a><br>
+  <a href="{{ url_for('edit_after_parties') }}">My after parties</a><br>
+</div>
 <div class="container-fluid afterparties">
-  <form role="form" action="{{ url_for('add_after_party') }}" method=POST>
+  <form role="form" action="{{ url_for('add_after_party') }}" method="POST">
     <div class="form-group">
       <label>Location:</label>
-      <input class="form-control" type=text name=location required>
+      <input class="form-control" type="text" name="location"  required>
     </div>
     <div class="form-group">
-      <label>Date and time (mm/dd/yyyy hh:mm am/pm):</label>
-      <input class="form-control" type=text name=date required>
+      <label>Date and start time (mm/dd/yyyy hh:mm am/pm):</label>
+      <input class="form-control" type="text" name="date" pattern="\d{2}/\d{2}/\d{4} \d{2}:\d{2} (am|pm)" required>
     </div>
     <div class="form-group">
       <label>Description:</label>
-      <textarea class="form-control" name=description rows=10 cols=40 required></textarea>
+      <textarea class="form-control" name="description" rows="10" cols="40" required></textarea>
     </div>
-    <button class="btn" type=submit>Add</button>
+    <button class="btn" type="submit">Add</button>
   </form>
 </div>
 {% endblock %}
