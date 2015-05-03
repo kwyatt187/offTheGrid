@@ -3,7 +3,7 @@
 {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
   <div class="container-fluid center">
     <h3>Login</h3>
-    <form role="form" action="{{ url_for('login') }}" method=post>
+    <form role="form" action="{{ url_for('login.view') }}" method=post>
       <div class="row">
 	<div class="form-group ">
 	  <label>Username:</label>
@@ -22,8 +22,8 @@
 	<br>
       </div>
       <div class="row">
-	<a href="{{ url_for('signup') }}">Sign up</a> |
-	<a href="{{ url_for('forgot_password') }}">Forgot username or password</a>
+	<a href="{{ url_for('signup.view') }}">Sign up</a> |
+	<a href="{{ url_for('forgot_password.view') }}">Forgot username or password</a>
       </div>
     </form>
 </div>

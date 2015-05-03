@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 <script type="text/javascript">
-    Stripe.setPublishableKey('{{ publishable_key }}');
+Stripe.setPublishableKey('{{ publishable_key }}');
 function stripeResponseHandler(status, response) {
     var form = $('#credit-card-form');
 
@@ -37,7 +37,7 @@ $(function($) {
 {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %} 
 <div class="container-fluid center">
   <h3>Sign up</h3>
-    <form id="credit-card-form" role="form" action="{{ url_for('signup') }}" method=post>
+    <form id="credit-card-form" role="form" action="{{ url_for('signup.view') }}" method=post>
       <div class="form-row">
 	<div class="form-group">
 	  <label>Username:</label>
