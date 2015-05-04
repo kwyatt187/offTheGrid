@@ -2,11 +2,12 @@
 Web application for Off The Grid Advertising
 
 Depends on:
-apache2
+MongoDB
+Sendmail
+Apache2
 mod_ssl
 mod_wsgi
-mongodb
+pymongo
 flask
-Flask_PyMongo
 Google Maps JavaScript API
 stripe

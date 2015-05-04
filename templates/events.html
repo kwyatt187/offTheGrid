@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid">
+  <h2>Events</h2>
+  <fieldset>
+    <legend>Today</legend>
+    {% for event in todays_events %}
+    <p>{{ event.name }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Date: {{ event.date }}</p>
+    <pre>{{ event.description }}</pre>
+    {% else %}
+    <p>No events today</p>
+    {% endfor %}
+  </fieldset>
+  <fieldset>
+    <legend>Tomorrow</legend>
+    {% for event in tomorrows_events %}
+    <p>{{ event.name }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Date: {{ event.date }}</p>
+    <pre>{{ event.description }}</pre>
+    {% else %}
+    <p>No events tomorrow</p>
+    {% endfor %}
+  </fieldset>
+  <fieldset>
+    <legend>Next 7 days</legend>
+    {% for event in this_weeks_events %}
+    <p>{{ event.name }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Date: {{ event.date }}</p>
+    <pre>{{ event.description }}</pre>
+    {% else %}
+    <p>No events in the next 7 days</p>
+    {% endfor %}
+  </fieldset>
+  <fieldset>
+    <legend>Next 30 days</legend>
+    {% for event in this_months_events %}
+    <p>{{ event.name }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Date: {{ event.date }}</p>
+    <pre>{{ event.description }}</pre>
+    {% else %}
+    <p>No events in the next 30 days</p>
+    {% endfor %}
+  </fieldset>
+<div>
+{% endblock %}

@@ -3,7 +3,6 @@
     color: blue;
     text-align: center;
     font-size: large;
-    
 }
 
 /* Sticky footer styles
@@ -96,3 +95,12 @@ html {
     margin: 0 auto;
 }
 
+#ezine_page {
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+}
+
+#ezine {
+    font-size: large;
+}

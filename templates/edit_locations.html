@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid">
+  <div class="left-menu">
+    <ul>
+      <li><a href="{{ url_for('location_admin.view') }}">Edit Locations</a></li>
+    </ul>
+  </div>
+  <label>Edit locations</label>
+  <form action="{{ url_for('location_admin.view') }}" method="POST">
+    <textarea class="form-control" name="locations" rows="10" cols="40" required>{{ locations }}</textarea>
+    <button class="btn"type="submit">Update</button>
+  </form>
+</div>
+{% endblock %}
+

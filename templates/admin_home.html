@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class="left-menu">
+    <ul>
+      <li><a href="{{ url_for('location_admin.view') }}">Edit Locations</a></li>
+    </ul>
+  </div>
+  <p>This is the home page of the admin interface. Choose an option from the left.</p>
+{% endblock %}

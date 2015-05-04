@@ -6,6 +6,7 @@ blueprint = Blueprint('logout',__name__)
 @blueprint.route('/logout')
 @no_ssl_required
 def view():
+    session.pop('admin_logged_in')
     session.pop('logged_in', None)
     session.pop('account_current', None)
     flash('You were logged out')

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <div class="container-fluid center">
+    <h3>Admin Login</h3>
+    <form role="form" action="{{ url_for('admin_login.view') }}" method=post>
+      <div class="row">
+	<div class="form-group ">
+	  <label>Username:</label>
+	  <input class="form-control" type=text name=username required>
+	</div>
+      </div>
+      <div class="row">
+	<div class="form-group">
+	  <label>Password:</label>
+	  <input class="form-control" type=password name=password required>
+	</div>
+      </div>
+      <div class="row">
+	<button id="login-button" type="submit">Login</button>
+      </div>
+    </form>
+</div>
+{% endblock %}
+
+	

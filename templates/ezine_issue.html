@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid">
+    <div id='ezine_page'>
+      <input type='image'  id='ezine' src="{{ image }}" width="400px" height="400px">
+    </div>
+</div>
+<script>
+    $('#ezine_page').click(function() {
+	var url_tokens = window.location.href.split("/");
+	var issue = url_tokens.slice(0,url_tokens.length-1).join("/");
+	var page = url_tokens[url_tokens.length-1];
+	var next_page = parseInt(page)+1;
+	var new_url = issue+"/"+next_page;
+	window.location = new_url
+    });
+</script>
+
+{% endblock %}

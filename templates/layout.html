@@ -27,15 +27,15 @@
       {% endif %}
       <ul class="nav nav-justified">
 	<li><a href="{{ url_for('home.view') }}">Home</a></li>
-	<li><a href="{{ url_for('locations.view') }}">Find location</a></li>
+	<li><a href="{{ url_for('locations.view') }}">Find Location</a></li>
 	<li><a href="{{ url_for('book_event.view') }}">Book Event</a></li>
+	<li><a href="{{ url_for('events.view') }}">Events</a></li>
 	<li><a href="{{ url_for('buy_ad.view') }}">Buy Ad</a></li>
-	<li><a href="{{ url_for('after_party.view') }}">Where's the after party</a></li>
+	<li><a href="{{ url_for('after_party.view') }}">After Party</a></li>
+	<li><a href="{{ url_for('ezine.view') }}">E-zine</a></li>
       </ul>
     </div>
   </nav>
-
-  
   {% for message in get_flashed_messages() %}
   <div class=flash>{{ message }}</div>
   {% endfor %}

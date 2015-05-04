@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% block body %}
+<script type="text/javascript">
+Stripe.setPublishableKey('{{ publishable_key }}');
+
+function stripeResponseHandler(status, response) {
+    var form = $('#credit-card-form');
+
+    if (response.error) {
+	// Show the errors on the form
+	form.find('.credit-card-errors').text(response.error.message);
+	form.find('button').prop('disabled', false);
+    } else {
+	// response contains id and card, which contains additional card details
+	var token = response.id;
+	// Insert the token into the form so it gets submitted to the server
+	form.append($('<input type="hidden" name="stripeToken" />').val(token));
+	// and submit
+	form.get(0).submit();
+
+	form.find('button').prop('disabled', false);
+    }
+};
+
+$(function($) {
+    $('#credit-card-form').submit(function(event) {
+	var form = $(this);
+	// Disable the submit button to prevent repeated clicks
+	form.find('button').prop('disabled', true);
+	
+	Stripe.card.createToken(form, stripeResponseHandler);
+	
+	// Prevent the form from submitting with the default action
+	return false;
+    });
+});
+
+$(function($) {
+    $('#cancel-form').submit(function(event) {
+	event.preventDefault()
+	if(confirm("Are you sure you want to cancel your subscription?")){
+	    $('#cancel-form').get(0).submit();
+	}
+    });
+});
+</script>
+
+{% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+<div class="container-fluid center">
+  <form role="form" action="{{ url_for('account.view') }}" method="POST">
+    <div class="form-group">
+      <fieldset> 
+	<legend>Email:</legend>
+	<input class="form-control" type="email" name="newemail" value="{{ email }}"/>
+	<button class="btn" type="submit" name="update_email">Update</button>
+      </fieldset>
+    </div>
+  </form>
+  <form role="form" action="{{ url_for('account.view') }}" method="POST">
+    <div class="form-group">
+      <fieldset>
+	<legend>Password:</legend>
+	<label>New Password:</label>
+	<input class="form-control" pattern=".{6,}" required title="Must contain at least 6 characters" type="password" name="password1" />
+	<label>Re-type Password:</label>
+	<input class="form-control" pattern=".{6,}" required title="Must contain at least 6 characters" type="password" name="password2" />
+	<button class="btn" type="submit" name="update_password">Update</button>
+      </fieldset>
+    </div>
+  </form>
+  <form id="credit-card-form" role="form" action="{{ url_for('update_credit_card.view') }}" method="POST">
+    <span class="credit-card-errors"></span>
+    <fieldset>
+      <legend>Credit card info</legend>
+      <div class="form-row form-group">
+	<label>Card Number:</label>
+	<input class="form-control" type="text" size="20" data-stripe="number" />
+      </div>
+      <div class="form-row form-group">
+	<label>CVC: </label><input type="text" size="4" data-stripe="cvc" />
+	<label>Exp: </label><input type="text" size="2" data-stripe="exp-month" placeholder="01"/>
+	<span> / </span>
+	<input type="text" size="4" data-stripe="exp-year" placeholder="2017"/>
+      </div>
+      <button class="btn" name="update_credit_card" type="submit">Update</button>
+      <br>
+      <br>
+      <br>
+    </fieldset>
+  </form>
+  <form id="cancel-form" role="form" action="{{ url_for('cancel.view') }}" method="POST">
+    <div class="form-group form-row">
+      <button id="cancel-button" name="cancel_subscription" type="submit">Cancel Subscription</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

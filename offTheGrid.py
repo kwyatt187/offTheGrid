@@ -7,10 +7,13 @@ from glob import glob
 app = Flask(__name__)
 app.config.from_object('config')
 
-views = ['home', 'account', 'after_party', 'add_after_party', 'edit_after_parties', 'book_event', 'buy_ad', 'forgot_password', 'locations', 'login', 'logout', 'update_credit_card', 'signup', 'verify', 'cancel']
+views = ['home', 'account', 'after_party', 'add_after_party', 'edit_after_parties',
+         'book_event', 'buy_ad', 'forgot_password', 'locations', 'login', 'logout',
+         'update_credit_card', 'signup', 'verify', 'cancel', 'events', 'ezine', 'admin_login',
+         'location_admin']
 
-for module_name in views:
-    module = import_module('views.'+module_name)
+for view in views:
+    module = import_module('views.'+view)
     app.register_blueprint(module.blueprint)
 
 if __name__ == '__main__':

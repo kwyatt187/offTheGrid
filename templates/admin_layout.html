@@ -1,0 +1,30 @@
+<!doctype html>
+<head>
+  <title>Off The Grid Advertising Admin Interface</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+  <link rel=stylesheet type=text/css href="/static/style.css">
+  <link rel=stylesheet href="/static/bootstrap-3.3.4-dist/css/bootstrap.min.css">
+  <link rel=stylesheet href="/static/bootstrap-3.3.4-dist/css/bootstrap-theme.css">
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="/static/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+</head>
+<body>
+  <nav role="navigation" class="navbar">
+    <div class="container-fluid">
+      <h1>Off The Grid Advertising Admin Interface</h1>
+      <ul class="nav nav-justified">
+	<li><a href="{{ url_for('home.view') }}">Home</a></li>
+	<li><a href="{{ url_for('location_admin.view') }}">Edit Location</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div id="content">
+    {% block body %}{% endblock %}
+  </div>
+  <footer id="footer">
+    <p>&copy 2015 www.offthegridadvertising.com All rights reserved</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid">
+  <div id="ezine">
+    {% for issue in issues %}
+    <p><a href="{{ url_for('ezine.view')+'/'+issue+'/1' }}">Issue #{{ issue }}</a></p>
+    {% else %}
+    <p>No issues posted yet</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
