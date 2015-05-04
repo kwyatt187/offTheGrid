@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, redirect, request, url_for, session, flash
 from pymongo import MongoClient
-from ssl_decorators import no_ssl_required
+from ssl_decorators import ssl_required
 
 blueprint = Blueprint('admin_login',__name__)
 
 @blueprint.route('/admin', methods=['GET', 'POST'])
-@no_ssl_required
+@ssl_required
 def view():
     error = None
     if request.method == 'POST':
