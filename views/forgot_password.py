@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, url_for, session, flash
+from flask import Blueprint, render_template, url_for, session, flash, request, redirect
 from pymongo import MongoClient
 from ssl_decorators import no_ssl_required
+from smtplib import SMTP
+from email.mime.text import MIMEText
 
 blueprint = Blueprint('forgot_password', __name__)
 
@@ -9,7 +11,8 @@ blueprint = Blueprint('forgot_password', __name__)
 def view():
     error = None
     if request.method == 'POST':
-        user = mongo.db.users.find({'email' : request.form['email']})
+        db = MongoClient().offTheGrid
+        user = db.users.find({'email' : request.form['email']})
         if user.count() == 0:
             error = "Could not find account for email: '"+request.form['email']+"'"
             return render_template("forgotpassword.html", error=error)
@@ -23,10 +26,10 @@ def view():
             msg['From'] = "Off The Grid Advertising"
             msg['To'] = request.form['email']
             
-            s = smtplib.SMTP('localhost')
+            s = SMTP('localhost')
             s.sendmail("Off_The_Grid_Account@offthegridadvertising.com", [request.form['email']], msg.as_string())
             s.quit()
             flash("Email with password sent to "+request.form['email']+". Don't forget to check your spam.")
-            return redirect(url_for('forgot_password'))
+            return redirect(url_for('forgot_password.view'))
     else:
         return render_template('forgotpassword.html', error=error)
